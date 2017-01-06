@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by shaheenz on 1/5/17.
+ * Created by fr13dman on 1/5/17.
  *
  * https://www.hackerrank.com/challenges/ctci-contacts
  */
@@ -12,7 +12,12 @@ class TrieNode {
     private Map<Character, TrieNode> children = new HashMap<Character, TrieNode>();
     private String completeWord = null;
 
-    public boolean addChild(Character c) {
+    public boolean addChild(String s) {
+
+        return false;
+    }
+
+    private boolean addChild(Character c) {
         if(getChildren().containsKey(c)) {
             //something
         } else {
