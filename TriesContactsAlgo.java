@@ -1,31 +1,67 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by fr13dman on 1/5/17.
  *
  * https://www.hackerrank.com/challenges/ctci-contacts
+ *
+ * Test Input (Adding contacts):
+ * 2
+ * add hack
+ * add hackerrank
+ *
+ *
  */
 
 class TrieNode {
     private Map<Character, TrieNode> children = new HashMap<Character, TrieNode>();
     private String completeWord = null;
 
-    public boolean addChild(String s) {
+    public TrieNode addChild(String s) {
+        if(s == null || s.isEmpty())
+            return null;
 
-        return false;
+        char[] chars = s.toCharArray();
+
+        TrieNode result = null;
+        for(char c : chars)
+            result = addChild(c);
+
+        result.setCompleteWord(s);
+        return result;
     }
 
-    private boolean addChild(Character c) {
+    private TrieNode addChild(Character c) {
+        TrieNode result = null;
+
         if(getChildren().containsKey(c)) {
-            //something
+            result = getChildren().get(c);
         } else {
-            TrieNode node = new TrieNode();
-            getChildren().put(c, node);
+            result = new TrieNode();
+            getChildren().put(c, result);
         }
 
-        return false;
+        return result;
+    }
+
+    public List<String> enumerateCompletedWords() {
+        return this.enumerateCompletedWords(this);
+    }
+
+    private List<String> enumerateCompletedWords(TrieNode node) {
+        if(node == null)
+            return new ArrayList<String>();
+
+        List<String> result = new ArrayList<String>();
+
+        if(node.getCompleteWord() != null)
+            result.add(node.getCompleteWord());
+
+        for(TrieNode _node : node.getChildren().values()) {
+            result.addAll(enumerateCompletedWords(_node));
+        }
+
+        return result;
     }
 
     public Map<Character, TrieNode> getChildren() {
@@ -55,11 +91,33 @@ public class TriesContactsAlgo {
     }
 
     public static void main(String args[]) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
 
+        TriesContactsAlgo driver = new TriesContactsAlgo();
+
+        for(int a0 = 0; a0 < n; a0++) {
+            String op = in.next();
+            String contact = in.next();
+
+            switch (op) {
+                case "add":
+                    driver.addName(contact);
+                    break;
+                case "find":
+                    driver.searchPartial(contact);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid op command entered. Only 'add' and 'find' operations are supported!");
+            }
+        }
+
+        System.out.println(Arrays.toString(driver.root.enumerateCompletedWords().toArray()));
     }
 
     public boolean addName(String name) {
-        return false;
+        TrieNode node = this.root.addChild(name);
+        return node != null;
     }
 
     public int searchPartial(String partial) {
