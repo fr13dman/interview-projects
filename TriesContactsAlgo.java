@@ -50,6 +50,36 @@ class TrieNode {
         return result;
     }
 
+    public List<String> searchPartial(String partial) {
+        if(partial == null || partial.isEmpty())
+            return new ArrayList<String>();
+
+        return searchPartial(partial, this);
+    }
+
+    private List<String> searchPartial(String partial, TrieNode node) {
+        if(node == null) {
+            System.out.println("Partial " + partial + " string not found!");
+            return new ArrayList<String>();
+        }
+
+        char[] chars = partial.toCharArray();
+        List<String> result = new ArrayList<String>();
+
+        TrieNode nextNode = node;
+        for(char c : chars) {
+            if(nextNode.getChildren().containsKey(c)) {
+                nextNode = nextNode.getChildren().get(c);
+            } else {
+                nextNode = null;
+                break;
+            }
+        }
+
+        return enumerateCompletedWords(nextNode);
+    }
+
+
     public List<String> enumerateCompletedWords() {
         return this.enumerateCompletedWords(this);
     }
@@ -111,14 +141,14 @@ public class TriesContactsAlgo {
                     driver.addName(contact);
                     break;
                 case "find":
-                    driver.searchPartial(contact);
+                    System.out.println(driver.searchPartial(contact));
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid op command entered. Only 'add' and 'find' operations are supported!");
             }
         }
 
-        System.out.println(Arrays.toString(driver.root.enumerateCompletedWords().toArray()));
+        //System.out.println("All Contacts: " + Arrays.toString(driver.root.enumerateCompletedWords().toArray()));
     }
 
     public boolean addName(String name) {
@@ -127,6 +157,12 @@ public class TriesContactsAlgo {
     }
 
     public int searchPartial(String partial) {
+        List<String> stringList = this.root.searchPartial(partial);
+        //System.out.println(Arrays.toString(stringList.toArray()));
+        return stringList.size();
+    }
+
+    public int searchCompleteWord(String word) {
         return 0;
     }
 
