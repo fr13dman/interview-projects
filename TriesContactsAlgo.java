@@ -25,20 +25,26 @@ class TrieNode {
 
         TrieNode result = null;
         for(char c : chars)
-            result = addChild(c);
+            if(result == null)
+                result = addChild(c, this);
+            else
+                result = addChild(c, result);
 
         result.setCompleteWord(s);
         return result;
     }
 
-    private TrieNode addChild(Character c) {
+    private TrieNode addChild(Character c, TrieNode node) {
+        if(node == null)
+            throw new IllegalArgumentException("Null node passed to addChild call!");
+
         TrieNode result = null;
 
-        if(getChildren().containsKey(c)) {
-            result = getChildren().get(c);
+        if(node.getChildren().containsKey(c)) {
+            result = node.getChildren().get(c);
         } else {
             result = new TrieNode();
-            getChildren().put(c, result);
+            node.getChildren().put(c, result);
         }
 
         return result;
