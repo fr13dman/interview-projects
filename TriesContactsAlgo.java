@@ -15,7 +15,8 @@ import java.util.*;
 
 class TrieNode {
     private Map<Character, TrieNode> children = new HashMap<Character, TrieNode>();
-    private String completeWord = null;
+    private String completeWord;
+    private Integer val = 0;
 
     public TrieNode addChild(String s) {
         if(s == null || s.isEmpty())
@@ -46,26 +47,24 @@ class TrieNode {
             result = new TrieNode();
             node.getChildren().put(c, result);
         }
-
+        result.val++;
         return result;
     }
 
-    public List<String> searchPartial(String partial) {
+    public int searchPartial(String partial) {
         if(partial == null || partial.isEmpty())
-            return new ArrayList<String>();
+            return 0;
 
         return searchPartial(partial, this);
     }
 
-    private List<String> searchPartial(String partial, TrieNode node) {
+    private int searchPartial(String partial, TrieNode node) {
         if(node == null) {
             System.out.println("Partial " + partial + " string not found!");
-            return new ArrayList<String>();
+            return 0;
         }
 
         char[] chars = partial.toCharArray();
-        List<String> result = new ArrayList<String>();
-
         TrieNode nextNode = node;
         for(char c : chars) {
             if(nextNode.getChildren().containsKey(c)) {
@@ -76,7 +75,7 @@ class TrieNode {
             }
         }
 
-        return enumerateCompletedWords(nextNode);
+        return nextNode == null ? 0 : nextNode.val;
     }
 
 
@@ -132,6 +131,9 @@ public class TriesContactsAlgo {
 
         TriesContactsAlgo driver = new TriesContactsAlgo();
 
+        //start time
+        long startTime = System.nanoTime();
+
         for(int a0 = 0; a0 < n; a0++) {
             String op = in.next();
             String contact = in.next();
@@ -148,7 +150,11 @@ public class TriesContactsAlgo {
             }
         }
 
-        //System.out.println("All Contacts: " + Arrays.toString(driver.root.enumerateCompletedWords().toArray()));
+        //end time
+        long endTime = System.nanoTime();
+        System.out.println("That took " + (endTime - startTime)/1000000 + " milliseconds");
+
+        System.out.println("All Contacts: " + Arrays.toString(driver.root.enumerateCompletedWords().toArray()));
     }
 
     public boolean addName(String name) {
@@ -157,18 +163,6 @@ public class TriesContactsAlgo {
     }
 
     public int searchPartial(String partial) {
-        List<String> stringList = this.root.searchPartial(partial);
-        //System.out.println(Arrays.toString(stringList.toArray()));
-        return stringList.size();
+        return this.root.searchPartial(partial);
     }
-
-    public int searchCompleteWord(String word) {
-        return 0;
-    }
-
-    private List<String> searchPartial(String partial, TrieNode root) {
-        return null;
-    }
-
-
 }
