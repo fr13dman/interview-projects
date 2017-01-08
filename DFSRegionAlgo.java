@@ -4,11 +4,7 @@
  * https://www.hackerrank.com/challenges/ctci-connected-cell-in-a-grid
  */
 
-import java.io.*;
 import java.util.*;
-import java.text.*;
-import java.math.*;
-import java.util.regex.*;
 
 public class DFSRegionAlgo {
 
@@ -23,20 +19,43 @@ public class DFSRegionAlgo {
             }
         }
 
-        dfsMaxRegion(n, m, grid);
+        System.out.println(new DFSRegionAlgo().dfsMaxRegion(n, m, grid));
     }
 
-    private static int dfsMaxRegion(int n, int m, int[][] grid) {
-        //step 1 - clone grid to track visited cells
+    private int dfsMaxRegion(int n, int m, int[][] grid) {
+        //step 1 - clone grid to track visited cells and count using dfs
         int[][] visited = new int[n][m];
-        System.arraycopy(grid, 0, visited, 0, grid.length);
 
-        printGrid(n, m, grid);
-        printGrid(n, m, visited);
+        //printGrid(n, m, grid);
+        //printGrid(n, m, visited);
 
-        //step 2 - create max_region variable and traverse grid for regions
+        // traverse grid and count cells
+        int max = 0;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++) {
+                max = Math.max(max, countAdjacentCells(grid, visited, i, j));
+            }
+        return max;
+    }
 
-        return 0;
+    private int countAdjacentCells(int[][] grid, int[][] visited, int x, int y) {
+        if(x < 0 || y < 0 || x >= grid.length || y >= grid[0].length)
+            return 0;
+
+        if(grid[x][y] == 0 || visited[x][y] == 1) return 0;
+        visited[x][y] = 1;
+
+        int count = 1;
+        count += countAdjacentCells(grid, visited, x + 1, y);
+        count += countAdjacentCells(grid, visited, x - 1, y);
+        count += countAdjacentCells(grid, visited, x, y + 1);
+        count += countAdjacentCells(grid, visited, x, y - 1);
+        count += countAdjacentCells(grid, visited, x + 1, y + 1);
+        count += countAdjacentCells(grid, visited, x - 1, y - 1);
+        count += countAdjacentCells(grid, visited, x + 1, y - 1);
+        count += countAdjacentCells(grid, visited, x - 1, y + 1);
+
+        return count;
     }
 
     private static void printGrid(int n, int m, int[][] a) {
@@ -48,8 +67,4 @@ public class DFSRegionAlgo {
         }
         System.out.println();
     }
-
-
-
-
 }
