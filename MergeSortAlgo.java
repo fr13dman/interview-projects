@@ -4,7 +4,7 @@ import java.util.*;
 import java.text.*;
 
 /**
- * Created by shaheenz on 12/21/16.
+ * Created by fr13dman on 12/21/16.
  * https://www.cs.cmu.edu/~adamchik/15-121/lectures/Sorting%20Algorithms/code/MergeSort.java (Reference)
  */
 public class MergeSortAlgo {
