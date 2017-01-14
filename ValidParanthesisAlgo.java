@@ -32,12 +32,12 @@ public class ValidParanthesisAlgo {
         char[] charArray = s.toCharArray();
 
         for(char c : charArray) {
-            if(!symbolMap.containsKey(c) && stack.isEmpty())
+            if(symbolMap.containsKey(c) && stack.isEmpty())
                 return false;
 
             //should be the right parenthesis character
-            if(!symbolMap.containsKey(c)) {
-                if(stack.pop() != c)
+            if(symbolMap.containsKey(c)) {
+                if(stack.pop() != symbolMap.get(c))
                     return false;
             } else {
                 stack.push(c);
