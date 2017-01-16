@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -28,19 +31,42 @@ public class GeneratePermutationsAlgo {
         int n = in.nextInt();
         int[] nums = new int[n];
 
-        int i = 0;
-        while (in.hasNext()) {
-            nums[i++] = in.nextInt();
+        for(int i = 0; i < n; i++) {
+            nums[i] = in.nextInt();
         }
 
         printPermutations(nums);
     }
 
     private static void printPermutations(int[] nums) {
-        int length = nums.length;
+        if(nums.length == 1) return;
 
-        for(int i = 0; i < length; i++) {
-
+        List<String> list = getPermutations(nums);
+        for (String s : list) {
+            System.out.println(s);
         }
+    }
+
+    private static List<String> getPermutations(int[] nums) {
+        List<String> arrayList = new ArrayList<String>();
+
+        if(nums.length == 1) {
+            arrayList.add(nums[0] + "");
+            return arrayList;
+        }
+
+        int num = nums[0];
+        arrayList = getPermutations(Arrays.copyOfRange(nums, 1, nums.length));
+
+        List<String> permutations = new ArrayList<String>();
+        for (String s : arrayList) {
+            for (int j = 0; j <= s.length(); j++)
+                permutations.add(insertNum(s, num, j));
+        }
+        return permutations;
+    }
+
+    private static String insertNum(String s, int num, int i) {
+        return s.substring(0, i) + num + s.substring(i);
     }
 }
